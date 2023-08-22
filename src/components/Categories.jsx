@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-//import { chengeCategory } from "../redux/slices/filterSlice";
-
 
 function Categories({ value, onChangeCategory }) {
 
 
-
-
+  
 function command (i) {
-  onChangeCategory(i)     //Выбор категории             //Переброс на page 1  при смене категории
+  onChangeCategory(i)    //Переброс на page 1  при смене категории
 }
 
 

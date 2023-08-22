@@ -1,40 +1,40 @@
 import { useState, useEffect,  /* useContext */ } from 'react';
-//import { SearchContext } from '../App'
+import { useNavigate } from "react-router-dom";
+import { useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
-import Sort from '../components/Sort';
+import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock/';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
-///////////////////////////////////////////////////////
-import { useSelector, useDispatch } from 'react-redux';
-import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
 import axios from 'axios'
+import qs from 'qs'
+
 
 
 export const Home = () => {
 
+  const isSeacrh = useRef(false) //хранение значений для внутренних данных компонента
+  const isMounted = useRef(false)
 
-  const [items, setItems] = useState([])            // Пиццы пришедшие с бэка
-  const [isLoading, setIsloading] = useState(true)  // Лодеры пиц  
-
-
+  const [items, setItems] = useState([])            
+  const [isLoading, setIsloading] = useState(true)  
 
 
  // const [currentPage, setCurrentPage] = useState(1)  // Какая страница будет первой 
 
-  // Redux-данные
+  const navigate = useNavigate()
   const dispatch = useDispatch()
-  const {categoryId, sort, currentPage,   search} = useSelector((state) =>  state.redOne)
-
-
+  const {categoryId, sort, currentPage, search} = useSelector((state) =>  state.redOne)
 
 
 
 
 const onChangeCategory = (id) => {
-    dispatch(setCategoryId(id))      //Функция все равно пробрасвает объект: {type: 'filter/setCategoryId', payload: 1}
+    dispatch(setCategoryId(id))      
 }
 
 const onChangePage = (number) => {
@@ -42,25 +42,82 @@ const onChangePage = (number) => {
 }
 
 
+const fetchPizzas = () => {
 
-useEffect (() => {        
   setIsloading(true) 
+  const sortBy = sort.sortProperty.replace('-', '');                // по чем сортировать (rating, price, name) 
+  const order = sort.sortProperty.includes('-')? 'asc' : 'desc';    // убыванию возрастанию
+  const category = categoryId > 0 ? `category=${categoryId}` : '';
+  const searchHome = search ? `&search=${search}` : '';
 
-const sortBy = sort.sortProperty.replace('-', '');                // по чем сортировать (rating, price, name) 
-const order = sort.sortProperty.includes('-')? 'asc' : 'desc';    // убыванию возрастанию
-const category = categoryId > 0 ? `category=${categoryId}` : '';
-const searchEEE = search ? `&search=${search}` : '';
 
 axios
-  .get(`https://645f47507da4477ba9542dc4.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${searchEEE}`)
+  .get(`https://645f47507da4477ba9542dc4.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${searchHome}`)
   .then(res => {   
   setItems(res.data)
   setIsloading(false)
 })
-  // window.scrollTo(0, 0)
+}
+
+
+
+// ПЕРЕХОД НА СПАРСЕНЫЙ АДРЕС
+useEffect(() => {
+  if(isMounted.current) {
+    const qeryString = qs.stringify({   //qs.stringify - делаем строку
+
+      sortProperty: sort.sortProperty,
+      categoryId,
+      currentPage
+
+   })
+
+   navigate(`?${qeryString}`);          // формированием строки на основе состояние диспатча
+  }
+
+
+  isMounted.current = true;
+
+}, [categoryId, sort.sortProperty, currentPage]) 
+
+
+
+
+
+// Если был первый рендер, то проверем URL-параметры и сохраняем в Redux
+useEffect(() => {
+  if (window.location.search) {
+
+    const params = qs.parse(window.location.search.substring(1))  // qs.parse - позволяет спаристь данные из ссылки в объект 
+
+    const sort = list.find(obj => obj.sortProperty === params.sortProperty)
+  
+
+    dispatch(setFilters({...params, sort }))
+
+    isSeacrh.current = true; 
+  }
+  
+}, [])
+
+
+
+
+
+useEffect (() => {
+
+    if( !isSeacrh.current ) {
+      fetchPizzas();
+    }
+    isSeacrh.current = false
 
 }, [categoryId, sort.sortProperty, search, currentPage])  
-  
+
+
+
+
+ 
+
 
 
 
@@ -71,12 +128,9 @@ const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> 
 return (
 <div className="container">
   <div className="content__top">
-
         <Categories value={categoryId} onChangeCategory={onChangeCategory} funPage={setCurrentPage}/>
         <Sort/>
-
   </div>   
-
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items"> {isLoading ? skeleton : pizzas}</div> 
     
@@ -86,36 +140,9 @@ return (
 )}
 
 
-
 export default Home
 
 
 
 
 
-/* УДАЛЕНИЕ ПРОБЕЛОВ
-let forValue =  Array.from(searchValue)
-
-let newSas = forValue.filter((el) => {
-
-  if(el == ' ') {
-    return false
-  }
-  return true
-})
-
-let word = newSas.join('')
-
-console.log(word)
-*/
-
-/*  Пример поиска в статичном массиве 
-items.filter((obj) => {
-
-  if(obj.name.toLocaleLowerCase().includes(cleanedQuery.toLocaleLowerCase()))  {     //searchValue может быть пробелом
-    return true
-  }
-  return false
-
-  }).
-*/

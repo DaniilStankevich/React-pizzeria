@@ -1,8 +1,17 @@
-import { useState } from "react";
-
+import { useState,  useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setSort} from "../redux/slices/filterSlice";
+import { useRef } from 'react';
 
+
+export const list = [ 
+  {name:'популярности (DESC)',  sortProperty: 'rating' },
+  {name:'популярности (ASC)',  sortProperty: '-rating' },
+  {name:'цене (DESC)', sortProperty: 'price' },
+  {name:'цене (ASC)', sortProperty: '-price' },
+  {name:'алфавиту (DESC)', sortProperty: 'name'}, //был title
+  {name:'алфавиту (ASC)', sortProperty: '-name'} 
+ ]
 
 
 function Sort () {
@@ -11,19 +20,9 @@ function Sort () {
 const dispatch  = useDispatch()
 const sort = useSelector((state) => state.redOne.sort)
 
+const sortRef = useRef()
 
-
-const [open, setOpen] = useState(false)
-const list = [ 
-                {name:'популярности (DESC)',  sortProperty: 'rating' },
-                {name:'популярности (ASC)',  sortProperty: '-rating' },
-                {name:'цене (DESC)', sortProperty: 'price' },
-                {name:'цене (ASC)', sortProperty: '-price' },
-                {name:'алфавиту (DESC)', sortProperty: 'name'}, //был title
-                {name:'алфавиту (ASC)', sortProperty: '-name'} 
-               ]
-
-               
+const [open, setOpen] = useState(false)            
 const sortName = sort.name
 
 const OnClickListItem = (obj) => {
@@ -32,8 +31,38 @@ const OnClickListItem = (obj) => {
   }
 
 
-    return (
-      <div className="sort">
+//только не composetPath() a composedPath() и обычний event.path уже и в хроме убрали по этому только так )
+
+  useEffect(() => {
+
+
+    const handleClickOutside = (event) => {
+
+      if(!event.composedPath().includes(sortRef.current)) {
+        console.log('Был клик')
+        setOpen(false)
+
+    }
+
+  }
+    
+    document.body.addEventListener('click', handleClickOutside )
+
+      //let arr = event.composedPath()
+
+   
+
+      return () => {
+        document.body.removeEventListener('click', handleClickOutside );
+      };
+  
+
+  },[] )
+  
+
+
+  return (
+      <div className="sort" ref={sortRef}>
         <div className="sort__label">
           <svg
             width="10"
@@ -65,14 +94,8 @@ const OnClickListItem = (obj) => {
                 {obj.name}
               </li>
            ))}
-
-
-
           </ul>
         </div>}
-
-
-
       </div>)
   }
   

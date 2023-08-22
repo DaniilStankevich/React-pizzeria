@@ -12,10 +12,8 @@ import debounce from 'lodash.debounce'
 //const { searchValue, setSearchValue } = useContext(SearchContext )
 
 
-
-
 // Метод debounce по принимает как аргумент функциию или метод 
-// и фу-ия будет вызвана в через какое то колличество времене установленым 2 аргументом 
+// фу-ия будет вызвана в через какое то времени установленным 2 аргументом 
 
 
 
@@ -32,7 +30,6 @@ const searchDispath = useDispatch()
 
 
 
-
 const updateSearchValue = useCallback(
 
   debounce((str) => {
@@ -42,7 +39,6 @@ const updateSearchValue = useCallback(
 
       if (endValue !== '') {
         searchDispath(setSearch(endValue))
-        console.log('Сработка диспатча')
       }
       else {
         setValue('')
@@ -127,7 +123,7 @@ const onClickClear = () => {
 export default Search;
 
 
-// Справка по правилам ввода iputa 
+// Справка по правилам ввода input
 /*
 
 1) Мы можем задать правило в функции "onChangeInput" для недопущения создания 

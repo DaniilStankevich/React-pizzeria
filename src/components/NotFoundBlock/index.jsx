@@ -1,9 +1,6 @@
 import React from 'react'
-
 import styles from './NotFoundBlock.module.scss';
 
-
-console.log(styles);
 
 const NotFoundBlcok = () => {
   return (
@@ -17,7 +14,7 @@ const NotFoundBlcok = () => {
 
     </h1>
 
-    <p className={styles.description}> К сожалению данная страница отсуттсвует в нашей пиццерии</p>
+    <p className={styles.description}> К сожалению данная страница отсутсвует в нашей пиццерии</p>
     </div>
   )
 }

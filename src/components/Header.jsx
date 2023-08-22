@@ -3,33 +3,23 @@ import { Link } from 'react-router-dom';
 import Search from './Search';
 
 import { useSelector, useDispatch } from 'react-redux';
-
 import { setOpen } from '../redux/slices/filterSlice';
 
 
 
 function Header() {
 
+  const openSer = useSelector((state) =>  state.redOne.openSer)
+  const dispatch = useDispatch()
 
-
-const openSer = useSelector((state) =>  state.redOne.openSer)
-const dispatch = useDispatch()
-
-  console.log('Header Updating')
+//console.log('Header Updating')
 
 function smena () {
   dispatch(setOpen(true))
 }
 
-
-console.log(openSer)
-
-
 const open =  openSer
 
-
-
-//onClick={smena}
 
 return   ( 
       <div className="header">
