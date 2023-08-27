@@ -1,4 +1,4 @@
-import { useState, useEffect,  /* useContext */ } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,20 +17,18 @@ import qs from 'qs'
 
 export const Home = () => {
 
-  const isSeacrh = useRef(false) //хранение значений для внутренних данных компонента
+  const isSeacrh = useRef(false) 
   const isMounted = useRef(false)
-
+  
   const [items, setItems] = useState([])            
   const [isLoading, setIsloading] = useState(true)  
 
-
+  
  // const [currentPage, setCurrentPage] = useState(1)  // Какая страница будет первой 
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {categoryId, sort, currentPage, search} = useSelector((state) =>  state.redOne)
-
-
 
 
 const onChangeCategory = (id) => {
@@ -43,13 +41,11 @@ const onChangePage = (number) => {
 
 
 const fetchPizzas = () => {
-
   setIsloading(true) 
   const sortBy = sort.sortProperty.replace('-', '');                // по чем сортировать (rating, price, name) 
-  const order = sort.sortProperty.includes('-')? 'asc' : 'desc';    // убыванию возрастанию
+  const order = sort.sortProperty.includes('-')? 'asc' : 'desc';    // убыванию-возрастанию
   const category = categoryId > 0 ? `category=${categoryId}` : '';
   const searchHome = search ? `&search=${search}` : '';
-
 
 axios
   .get(`https://645f47507da4477ba9542dc4.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${searchHome}`)
@@ -75,11 +71,9 @@ useEffect(() => {
    navigate(`?${qeryString}`);          // формированием строки на основе состояние диспатча
   }
 
-
   isMounted.current = true;
 
 }, [categoryId, sort.sortProperty, currentPage]) 
-
 
 
 
@@ -89,39 +83,30 @@ useEffect(() => {
   if (window.location.search) {
 
     const params = qs.parse(window.location.search.substring(1))  // qs.parse - позволяет спаристь данные из ссылки в объект 
-
     const sort = list.find(obj => obj.sortProperty === params.sortProperty)
   
-
     dispatch(setFilters({...params, sort }))
 
     isSeacrh.current = true; 
   }
-  
 }, [])
 
 
-
-
-
 useEffect (() => {
+ // console.log( isSeacrh.current, '--Снаружи')
 
     if( !isSeacrh.current ) {
+ //     console.log('Запросс пицц')
       fetchPizzas();
     }
+
     isSeacrh.current = false
 
-}, [categoryId, sort.sortProperty, search, currentPage])  
+}, [categoryId, sort.sortProperty, search, currentPage, isMounted.current])  
 
 
 
-
- 
-
-
-
-
-const pizzas = items.map((item) => (<PizzaBlock key={item.id} title={item.name} price={item.price}imageUrl={item.imageUrl} sizes={item.sizes} types={item.types}/>))
+const pizzas = items.map((obj) => (<PizzaBlock key={obj.id}  {...obj}   /* title={item.name} price={item.price}imageUrl={item.imageUrl} sizes={item.sizes} types={item.types}  */ />))
 const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> )
 
 
@@ -139,10 +124,16 @@ return (
 </div>
 )}
 
-
 export default Home
 
 
+/* Доп функционал 
 
+1. Без цифр в поисковике 
+2. Удаление пробелов после поиска
+3. Добавиление пицц разны катеогорий и размеров 
+4. При выходе из корзины (запрос) - done 
+
+*/
 
 

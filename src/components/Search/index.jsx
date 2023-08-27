@@ -1,26 +1,20 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
-import styles from './Search.module.scss'
-import { SearchContext } from '../../App'
-
-
+import { useCallback, useState } from 'react'
 import React, { useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { setSearch } from '../../redux/slices/filterSlice';
+import {useDispatch} from 'react-redux';
+import {setSearch} from '../../redux/slices/filterSlice';
 
 import debounce from 'lodash.debounce'
+import styles from './Search.module.scss'
 
-//const { searchValue, setSearchValue } = useContext(SearchContext )
 
 
 // Метод debounce по принимает как аргумент функциию или метод 
 // фу-ия будет вызвана в через какое то времени установленным 2 аргументом 
 
 
-
 const Search = () => { 
 
 const [value, setValue] = useState('')
-
 
 // Переменну inputRef мы создавали для фокуса
 const inputRef = useRef()
@@ -36,14 +30,12 @@ const updateSearchValue = useCallback(
 
     let endValue = str.replace(/ +/g, ' ').trim();
 
-
       if (endValue !== '') {
         searchDispath(setSearch(endValue))
       }
       else {
         setValue('')
       }
-
 
   }, 3000 ),
 
@@ -119,11 +111,9 @@ const onClickClear = () => {
   )
 }
 
-
 export default Search;
 
-
-// Справка по правилам ввода input
+// Возможные правида ввода input
 /*
 
 1) Мы можем задать правило в функции "onChangeInput" для недопущения создания 

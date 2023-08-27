@@ -1,27 +1,49 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import {addItem} from '../../redux/slices/cartSlice'
 
 
-function Pizza( {title, price , imageUrl, sizes, types}) {
+
+function Pizza( {id, name, price, imageUrl, sizes, types} ) {
+
+const dispatch = useDispatch()
+const cartItem  = useSelector((state) => state.cart.items.find((obj) => obj.id === id  ) )
+
+let addedCount = cartItem ? cartItem.count : ''
 
 
-  const [activeType, setActiveType] = useState(0)
-  const [activeSize, setActiveSize] = useState(0)
+const [activeType, setActiveType] = useState(0)         //Тип теста
+const [activeSize, setActiveSize] = useState(sizes[0])  //Размеры
+
+const typeNames = ['Тонкое', 'Традиционнное']
 
 
-  const typeNames = ['Тонкое', 'Традиционнное']
+const onClikAdd = () => {
+  const item = {
+    id,
+    name,
+    price,
+    imageUrl,
+    type: typeNames[activeType],
+    size: activeSize
+  }
+
+  dispatch(addItem(item))
+}
+
 
 
 return (
 
   <div className="pizza-block-wrapper"> 
   
-<div className="pizza-block">
+    <div className="pizza-block">
           <img
               className="pizza-block__image"
               src={imageUrl }
               alt="Pizza"
           />
-          <h4 className="pizza-block__title">{title}</h4>
+          <h4 className="pizza-block__title">{ name}</h4>
 
 
           <div className="pizza-block__selector">
@@ -30,14 +52,14 @@ return (
           </ul>
 
           <ul>
-              {sizes.map((size => <li key={size} onClick={() => setActiveSize(size)} className={ activeSize === size ? "active": ''}> {size} </li> ))}
+              {sizes.map((size) => <li key={size} onClick={() => setActiveSize(size)} className={ activeSize === size ? "active": ''}> {size} </li> )}
           </ul>
-          </div>
+    </div>
 
 
     <div className="pizza-block__bottom">
       <div className="pizza-block__price">от {price} ₽</div>
-      <button   className="button button--outline button--add">
+      <button onClick={ onClikAdd } className="button button--outline button--add">
         <svg
           width="12"
           height="12"
@@ -51,17 +73,13 @@ return (
           />
         </svg>
         <span>Добавить</span>
-        <i>0</i>
+        {addedCount > 0 &&<i> {addedCount} </i> }
       </button>
     </div>
     </div> 
     
     </div> 
-
-
     )
-
-
 }
 
 

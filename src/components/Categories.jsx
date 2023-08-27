@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
 
 function Categories({ value, onChangeCategory }) {
 
 
-  
 function command (i) {
   onChangeCategory(i)    //Переброс на page 1  при смене категории
 }
 
-
 const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые' ]
-
 
 return (  
 

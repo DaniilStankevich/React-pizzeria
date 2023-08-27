@@ -16,13 +16,11 @@ export const list = [
 
 function Sort () {
 
-// Redux
+const [open, setOpen] = useState(false)            
 const dispatch  = useDispatch()
 const sort = useSelector((state) => state.redOne.sort)
 
 const sortRef = useRef()
-
-const [open, setOpen] = useState(false)            
 const sortName = sort.name
 
 const OnClickListItem = (obj) => {
@@ -31,33 +29,20 @@ const OnClickListItem = (obj) => {
   }
 
 
-//только не composetPath() a composedPath() и обычний event.path уже и в хроме убрали по этому только так )
 
   useEffect(() => {
-
-
     const handleClickOutside = (event) => {
-
       if(!event.composedPath().includes(sortRef.current)) {
-        console.log('Был клик')
         setOpen(false)
-
     }
-
-  }
+    }
     
     document.body.addEventListener('click', handleClickOutside )
-
-      //let arr = event.composedPath()
-
    
-
-      return () => {
-        document.body.removeEventListener('click', handleClickOutside );
-      };
-  
-
-  },[] )
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside );
+    };
+},[] )
   
 
 

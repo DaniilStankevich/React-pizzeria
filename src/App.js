@@ -16,8 +16,9 @@ function App() {
 
 // const [searchValue, setSearchValue] = useState(''); 
 
-  return ( <> 
-
+  return ( 
+  
+   <> 
     <div className="wrapper">
       <SearchContext.Provider >
           <Header />
@@ -29,14 +30,9 @@ function App() {
             <Route path="*" element={ <NotFound  />} />    
           </Routes>
         </div>
-
-
         </SearchContext.Provider>
 
-        </div>
-
-
-   
+    </div>
     </>
   );
 }
