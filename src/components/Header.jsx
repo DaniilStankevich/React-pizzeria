@@ -17,7 +17,6 @@ function Header() {
 
 //const open = openSer
 
-console.log(open)
 
 return   ( 
     <div className="header">

@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
@@ -10,8 +12,9 @@ import PizzaBlock from '../components/PizzaBlock/';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
-import axios from 'axios'
 import qs from 'qs'
+
+
 
 
 
@@ -19,40 +22,45 @@ export const Home = () => {
 
   const isSeacrh = useRef(false) 
   const isMounted = useRef(false)
+
   
-  const [items, setItems] = useState([])            
-  const [isLoading, setIsloading] = useState(true)  
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const {items, status} = useSelector((state) =>  state.pizza)
+
 
   
  // const [currentPage, setCurrentPage] = useState(1)  // Какая страница будет первой 
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
   const {categoryId, sort, currentPage, search} = useSelector((state) =>  state.redOne)
 
 
+
+
 const onChangeCategory = (id) => {
-    dispatch(setCategoryId(id))      
+    dispatch(setCategoryId(id))  
 }
+
 
 const onChangePage = (number) => {
     dispatch(setCurrentPage( number ))
 }
 
 
-const fetchPizzas = () => {
-  setIsloading(true) 
+const getPizzas = async () => {
+
   const sortBy = sort.sortProperty.replace('-', '');                // по чем сортировать (rating, price, name) 
   const order = sort.sortProperty.includes('-')? 'asc' : 'desc';    // убыванию-возрастанию
   const category = categoryId > 0 ? `category=${categoryId}` : '';
   const searchHome = search ? `&search=${search}` : '';
 
-axios
-  .get(`https://645f47507da4477ba9542dc4.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${searchHome}`)
-  .then(res => {   
-  setItems(res.data)
-  setIsloading(false)
-})
+  dispatch(fetchPizzas({
+          sortBy,
+          order,
+          category,
+          searchHome,
+          currentPage   }))
 }
 
 
@@ -65,14 +73,12 @@ useEffect(() => {
       sortProperty: sort.sortProperty,
       categoryId,
       currentPage
-
    })
 
    navigate(`?${qeryString}`);          // формированием строки на основе состояние диспатча
   }
 
   isMounted.current = true;
-
 }, [categoryId, sort.sortProperty, currentPage]) 
 
 
@@ -93,20 +99,18 @@ useEffect(() => {
 
 
 useEffect (() => {
- // console.log( isSeacrh.current, '--Снаружи')
 
     if( !isSeacrh.current ) {
- //     console.log('Запросс пицц')
-      fetchPizzas();
+        getPizzas();
     }
 
     isSeacrh.current = false
 
-}, [categoryId, sort.sortProperty, search, currentPage, isMounted.current])  
+}, [categoryId, sort.sortProperty, search, currentPage, /* isMounted.current */ ])  
 
 
 
-const pizzas = items.map((obj) => (<PizzaBlock key={obj.id}  {...obj}   /* title={item.name} price={item.price}imageUrl={item.imageUrl} sizes={item.sizes} types={item.types}  */ />))
+const pizzas =  items.map((obj) => (<PizzaBlock key={obj.id}  {...obj}   /* title={item.name} price={item.price}imageUrl={item.imageUrl} sizes={item.sizes} types={item.types}  */ />))
 const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> )
 
 
@@ -117,7 +121,7 @@ return (
         <Sort/>
   </div>   
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items"> {isLoading ? skeleton : pizzas}</div> 
+      <div className="content__items"> {status === 'loading' ? skeleton : pizzas}</div> 
     
        <Pagination  currentPage={currentPage}   onChangePage={onChangePage}/>
 
@@ -134,6 +138,34 @@ export default Home
 3. Добавиление пицц разны катеогорий и размеров 
 4. При выходе из корзины (запрос) - done 
 
+
+
+1. Side effects
+
+
 */
+
+
+
+
+/*
+
+const p = new Promise (function(resolve, reject) {
+    setTimeout(  function getik () {
+      console.log('Привет от сервера')
+
+       //reject('Error')
+       resolve('Удача')
+    }, 2000 )
+
+
+} ) 
+
+
+p.then((resolv) => console.log(resolv, '-удача')).catch((error) =>console.log(error, '-неудача'))
+
+//p.catch((error) =>console.log(error, '-неудача'))
+*/
+
 
 
