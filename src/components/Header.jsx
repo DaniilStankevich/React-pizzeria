@@ -3,19 +3,17 @@ import { useSelector} from 'react-redux';
 
 import Search from './Search';
 import logoSvg from '../assets/img/pizza-logo.svg';
+import { selectCart } from '../redux/slices/cartSlice';
+import { selectFilter } from '../redux/slices/filterSlice';
 
 
 function Header() {
 
-  //const dispatch = useDispatch()
-  const open = useSelector((state) =>  state.redOne.openSer)
-
-  const {items, totalPrice} = useSelector((state) => state.cart)
+  const {openSer}  = useSelector(selectFilter)
+  const {items, totalPrice} = useSelector(selectCart)
 
   const totalCount = items.reduce((sum, item) => sum + item.count , 0)
 
-
-//const open = openSer
 
 
 return   ( 
@@ -30,7 +28,7 @@ return   (
         </div>
       </div>
       </Link>
-      {open && <Search />}        
+      {openSer  && <Search />}        
       <div className="header__cart">
 
         <Link to="/cart" className="button button--cart">

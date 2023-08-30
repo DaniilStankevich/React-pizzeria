@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { selectFilter, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaData} from '../redux/slices/pizzaSlice';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
@@ -22,19 +21,13 @@ export const Home = () => {
 
   const isSeacrh = useRef(false) 
   const isMounted = useRef(false)
-
   
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {items, status} = useSelector((state) =>  state.pizza)
 
-
-  
- // const [currentPage, setCurrentPage] = useState(1)  // Какая страница будет первой 
-
-  const {categoryId, sort, currentPage, search} = useSelector((state) =>  state.redOne)
-
+  const {items, status} = useSelector(selectPizzaData)
+  const {categoryId, sort, currentPage, search} = useSelector(selectFilter)
 
 
 
@@ -67,16 +60,18 @@ const getPizzas = async () => {
 
 // ПЕРЕХОД НА СПАРСЕНЫЙ АДРЕС
 useEffect(() => {
-  if(isMounted.current) {
-    const qeryString = qs.stringify({   //qs.stringify - делаем строку
 
-      sortProperty: sort.sortProperty,
+
+  if(isMounted.current) {
+    const qeryString = qs.stringify({       //qs.stringify - делаем строку
+
+      sortProperty: sort.sortProperty,      
       categoryId,
       currentPage
    })
 
-   navigate(`?${qeryString}`);          // формированием строки на основе состояние диспатча
-  }
+   navigate(`?${qeryString}`);  // формированием строки на основе состояние диспатча - qeryString
+  }                             // вставка адреса 
 
   isMounted.current = true;
 }, [categoryId, sort.sortProperty, currentPage]) 
@@ -84,18 +79,26 @@ useEffect(() => {
 
 
 
+//console.log('(------Render home-------)')
+
+
+
 // Если был первый рендер, то проверем URL-параметры и сохраняем в Redux
+// Сработка после перезагрузки страницы
 useEffect(() => {
+
+
   if (window.location.search) {
 
     const params = qs.parse(window.location.search.substring(1))  // qs.parse - позволяет спаристь данные из ссылки в объект 
     const sort = list.find(obj => obj.sortProperty === params.sortProperty)
   
-    dispatch(setFilters({...params, sort }))
+    dispatch(setFilters({ ...params, sort }))
 
     isSeacrh.current = true; 
   }
 }, [])
+
 
 
 useEffect (() => {
@@ -110,6 +113,8 @@ useEffect (() => {
 
 
 
+
+
 const pizzas =  items.map((obj) => (<PizzaBlock key={obj.id}  {...obj}   /* title={item.name} price={item.price}imageUrl={item.imageUrl} sizes={item.sizes} types={item.types}  */ />))
 const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> )
 
@@ -121,10 +126,16 @@ return (
         <Sort/>
   </div>   
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items"> {status === 'loading' ? skeleton : pizzas}</div> 
     
-       <Pagination  currentPage={currentPage}   onChangePage={onChangePage}/>
+    {status === 'error' ? <div className="content__error-info">
+      
+        <h2> Корзина пустая 😕</h2>
+          <p> К сожалению, не удалось получить питсы.
+        Попробуйте повторить попытку позже</p> </div> :  
 
+      <div className="content__items"> {status === 'loading' ? skeleton : pizzas}</div>} 
+
+      <Pagination  currentPage={currentPage}   onChangePage={onChangePage}/>
 </div>
 )}
 
@@ -138,34 +149,12 @@ export default Home
 3. Добавиление пицц разны катеогорий и размеров 
 4. При выходе из корзины (запрос) - done 
 
+5. Селекты
+6. При запросе '123' условие. Сравнить даные при голой ошибке и ошибки без найденного 123
+
 
 
 1. Side effects
-
-
 */
-
-
-
-
-/*
-
-const p = new Promise (function(resolve, reject) {
-    setTimeout(  function getik () {
-      console.log('Привет от сервера')
-
-       //reject('Error')
-       resolve('Удача')
-    }, 2000 )
-
-
-} ) 
-
-
-p.then((resolv) => console.log(resolv, '-удача')).catch((error) =>console.log(error, '-неудача'))
-
-//p.catch((error) =>console.log(error, '-неудача'))
-*/
-
 
 

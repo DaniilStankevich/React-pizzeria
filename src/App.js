@@ -9,18 +9,12 @@ import './scss/app.scss'
 
 
 
-export const SearchContext = createContext()
 
 function App() {
 
-
-// const [searchValue, setSearchValue] = useState(''); 
-
   return ( 
-  
-   <> 
+   
     <div className="wrapper">
-      <SearchContext.Provider >
           <Header />
 
         <div className="content">
@@ -30,10 +24,9 @@ function App() {
             <Route path="*" element={ <NotFound  />} />    
           </Routes>
         </div>
-        </SearchContext.Provider>
 
     </div>
-    </>
+    
   );
 }
 
