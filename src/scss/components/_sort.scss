@@ -24,6 +24,9 @@
     }
   }
 
+
+
+
   &__popup {
     position: absolute;
     right: 0;
@@ -35,6 +38,16 @@
     padding: 10px 0;
     width: 160px;
     width: 300px;
+
+
+    
+    &_icon {
+      color: $orange;
+      font-size: 1.5rem;
+    }
+
+
+
 
     ul {
       overflow: hidden;

@@ -1,11 +1,13 @@
-//@import './fonts';
-@import './variables'; ////variables.scss
+
+@import './variables'; 
 @import './libs/normalize';
 
 @import './components/all';
 
 body {
   background-color: $background;
+  padding: 0 calc(20px - (100vw - 100%)) 0 0; 
+
 } 
 
 .wrapper {
@@ -27,8 +29,13 @@ body {
 .content {
   padding: 100px 0;
 
+
+  left: -120px;
+
+
+
   &__error-info {
-     margin: 100px auto;
+     margin: 200px auto;
      width: 500px;
      text-align: center;
 
@@ -60,6 +67,8 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(1, 1fr);
     grid-column-gap: 11px;
+
+
 
 
     @media (max-width: 1440px) {
@@ -102,11 +111,57 @@ body {
 
     }
 
-    @media (max-width: 820px) {
+
+        @media (max-width: 1260px) {
+      .categories { 
+        width: 100%;
+        overflow: a;
+
+        ul {
+          width: 785px;
+        }
+      }
+
+      .sort {
+        padding-left: 20px;
+        b {
+            display: none;
+        }
+      }
+
+
+    }
+
+    @media (max-width: 1110px) {
+
+      .sort {
+        padding-left: 20px;
+        b {
+            display: block;
+        }
+      }
+
+
+    }
+
+
+
+
+
+
+    @media (max-width: 1100px) {
       .categories {
         margin-top: 30px;
+
+        ul {
+          li {
+            margin: 3px;
+          }
+      }
       }
       flex-direction: column-reverse;
+
+
     }
 
     @media (max-width: 760px) {
@@ -125,6 +180,11 @@ body {
   
   }
 
+
+  @media (max-width: 1440px) {
+    padding-top: 30px;
+  }
+
 }
 
 
@@ -134,9 +194,123 @@ body {
   width: $container-width;
   margin: 0 auto;
 
+&__content {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Горизонтальное центрирование по главной оси */
+  align-items: center;
+
+  @media (max-width: 900px) {
+    padding-top: 0px;
+  }
+
+
+
+}
+
+  &__fullPizza {
+    display: flex;
+    justify-content: center; /* Горизонтальное центрирование */
+    align-items: center; /* Вертикальное центрирование */
+    
+    padding: 0px 25px;
+    display: flex;
+
+
+    &-loading {
+      text-align: center;
+      padding: 200px 0;
+    
+    }
+
+    h2 {
+      font-size: 38px;
+      font-weight: 800;
+    }
+
+    p {
+      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+      margin-top: 30px;
+      font-size: 20px;
+    }
+
+    h4 {
+      font-size: 26px;
+      margin: 20px 0px;
+    }
+
+    @media (max-width: 900px) {
+      flex-direction: column;
+
+
+      h2 {
+        font-size: 28px;
+      }
+
+      p {
+        margin-top: 15px;
+        font-size: 18px;
+      }
+
+  
+    }
+
+  
+      &-button {
+        margin-top: 30px;
+        text-align: center;
+        display: inline-block;
+        justify-content: center; /* Горизонтальное центрирование по главной оси */
+        align-items: center; /* Вертикальное центрирование по поперечной оси */
+
+
+        border-radius: 30px;
+        background-color: #232323;;
+        padding: 12px 0 14px;
+        width: 230px;
+        margin: 0 auto;
+        font-weight: 600;
+        font-size: 18px;
+
+        &:hover {
+          background-color: darken($color: $gray-line, $amount: 90);
+          border-color: darken($color: $gray-line, $amount: 90);
+
+          span {
+            color: $gray-line;
+          }
+        }
+
+        span {
+          color: #fff;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+        }
+
+      }
+
+  }
+
+
+  &__fullPizza-image {
+    width: 330px;
+    padding-right: 30px;
+
+    @media (max-width: 900px) {
+      padding: 0px;
+    }
+  
+    
+  }
+
+
+
+
+
   &--cart {
     max-width: 820px;
-    margin: 90px auto;
+    margin: 20px auto;
     .content__title {
       margin: 0;
     }
@@ -215,6 +389,9 @@ body {
     padding-top: 30px;
     margin-top: 30px;
 
+
+
+
     &-img {
       display: flex;
       align-items: center;
@@ -224,6 +401,13 @@ body {
       img {
         width: 80px;
         height: 80px;
+
+        @media (max-width: 810px) {
+          width: 60px;
+          height: 60px;     
+        }
+        
+
       }
     }
 
@@ -233,16 +417,31 @@ body {
       justify-content: center;
       width: 40%;
 
+      @media (max-width: 700px) {
+        align-items: center;      
+      }
+
+
       h3 {
         font-weight: bold;
         font-size: 22px;
         line-height: 27px;
         letter-spacing: 0.01em;
+
+        @media (max-width: 700px) {
+          font-size: 19px;
+          line-height: 30px;
+        }
+
       }
 
       p {
         font-size: 18px;
         color: #8d8d8d;
+
+        @media (max-width: 700px) {
+          font-size: 15px;
+        }
       }
     }
 
@@ -251,6 +450,9 @@ body {
       align-items: center;
       justify-content: space-between;
       width: 13%;
+
+
+
 
       &-minus {
         svg {
@@ -262,6 +464,10 @@ body {
 
       b {
         font-size: 22px;
+        @media (max-width: 575px) {
+            margin: 0 3px;
+        }
+  
       }
     }
 
@@ -275,6 +481,13 @@ body {
         font-weight: bold;
         font-size: 22px;
         letter-spacing: 0.01em;
+    
+
+      @media (max-width: 560px) {
+        font-size: 19px;
+        margin: 5px ;
+      }
+
       }
     }
 
@@ -321,6 +534,10 @@ body {
       span {
         font-size: 22px;
 
+        @media (max-width: 550px) {
+          font-size: 19px;
+        }
+
         &:last-of-type {
           b {
             color: $orange;
@@ -334,11 +551,20 @@ body {
       justify-content: space-between;
       margin-top: 40px;
 
+      @media (max-width: 550px) {
+        margin-top: 20px;
+      }
+
       .go-back-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 210px;
+
+                @media (max-width: 550px) {
+                   width: 170px;
+                   padding: 10px;
+                }
 
         border-color: darken($color: $gray-line, $amount: 10);
 
@@ -371,9 +597,16 @@ body {
         font-weight: 600;
         width: 210px;
         padding: 16px;
+
+        @media (max-width: 550px) {
+          width: 170px;
+       }
+
       }
     }
   }
+
+
 
   &--empty {
     margin: 80px auto;
@@ -405,6 +638,7 @@ body {
     }
 
     .button--black {
+      text-align: center;
       padding: 12px 0 14px;
       width: 230px;
       margin: 0 auto;

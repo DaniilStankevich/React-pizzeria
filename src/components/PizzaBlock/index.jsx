@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import {addItem, selectCart, selectCartItemById} from '../../redux/slices/cartSlice'
+import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
 
 
 function Pizza( {id, name, price, imageUrl, sizes, types} ) {
 
 const dispatch = useDispatch()
-const cartItem  = useSelector(selectCartItemById(id))
+const cartItemCount = useSelector(selectCartItemById(id))  // Возврщает count всех найденных пицц одно id
 
-let addedCount = cartItem ? cartItem.count : ''
+let addedCount =  cartItemCount > 0 ? cartItemCount  :  ''
 
 
 const [activeType, setActiveType] = useState(0)         //Тип теста
@@ -18,7 +18,20 @@ const [activeSize, setActiveSize] = useState(sizes[0])  //Размеры
 const typeNames = ['Тонкое', 'Традиционнное']
 
 
-const onClikAdd = () => {
+const typePastry = (event) => {
+  event.preventDefault()
+  setActiveType(event.target.value)
+}
+
+const typeSize = (event) => {
+  event.preventDefault()
+  setActiveSize(event.target.value)
+}
+
+
+const onClikAdd = (event) => {
+  event.preventDefault()
+
   const item = {
     id,
     name,
@@ -27,10 +40,8 @@ const onClikAdd = () => {
     type: typeNames[activeType],
     size: activeSize
   }
-
   dispatch(addItem(item))
 }
-
 
 
 return (
@@ -40,7 +51,7 @@ return (
     <div className="pizza-block">
           <img
               className="pizza-block__image"
-              src={imageUrl }
+              src={ imageUrl }
               alt="Pizza"
           />
           <h4 className="pizza-block__title">{ name}</h4>
@@ -48,17 +59,21 @@ return (
 
           <div className="pizza-block__selector">
           <ul>
-              {types.map((item) =><li key={item} onClick={() => setActiveType(item)} className={ activeType === item ? "active": ''}>{typeNames[item]}</li> )}             
+              {types.map((item) =><li key={item} onClick={(event) => typePastry(event)} value={item} className={ activeType === item ? "active": ''}>{typeNames[item]}</li> )}             
           </ul>
 
+
+
           <ul>
-              {sizes.map((size) => <li key={size} onClick={() => setActiveSize(size)} className={ activeSize === size ? "active": ''}> {size} </li> )}
+              {sizes.map((size) => <li key={size} onClick={(event) => typeSize(event)} value={size} className={ activeSize === size ? "active": ''}> {size} </li> )}
           </ul>
     </div>
 
 
     <div className="pizza-block__bottom">
       <div className="pizza-block__price">от {price} ₽</div>
+
+
       <button onClick={ onClikAdd } className="button button--outline button--add">
         <svg
           width="12"

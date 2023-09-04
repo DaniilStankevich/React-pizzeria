@@ -1,19 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector} from 'react-redux';
-
+import { selectCart } from '../redux/slices/cartSlice';
 import Search from './Search';
 import logoSvg from '../assets/img/pizza-logo.svg';
-import { selectCart } from '../redux/slices/cartSlice';
-import { selectFilter } from '../redux/slices/filterSlice';
 
 
 function Header() {
 
-  const {openSer}  = useSelector(selectFilter)
   const {items, totalPrice} = useSelector(selectCart)
-
   const totalCount = items.reduce((sum, item) => sum + item.count , 0)
 
+  const location = useLocation() //Перерисовка ком в случае нужного адреса
+
+ // Может пригодиться когда компонент точно может перерисовываться
+ // const pathname = window.location.pathname
 
 
 return   ( 
@@ -28,9 +28,14 @@ return   (
         </div>
       </div>
       </Link>
-      {openSer  && <Search />}        
-      <div className="header__cart">
 
+      {location.pathname !== '/cart' &&  <Search />  }
+
+
+
+    <div className="header__cart">
+
+  
         <Link to="/cart" className="button button--cart">
           <span>{totalPrice} ₽</span>
           <div className="button__delimiter"></div>
@@ -64,8 +69,8 @@ return   (
             />
           </svg>
           <span>{totalCount}</span>
-        </Link>
-      </div>
+        </Link> 
+      </div> 
 
       </div>
     </div> 

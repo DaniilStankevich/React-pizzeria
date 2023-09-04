@@ -32,6 +32,7 @@ const updateSearchValue = useCallback(
 
       if (endValue !== '') {
         searchDispath(setSearch(endValue))
+        setValue(endValue)
       }
       else {
         setValue('')
@@ -41,7 +42,6 @@ const updateSearchValue = useCallback(
 
   [],
 )
-
 
 
 const onChangeInput = (event) => {

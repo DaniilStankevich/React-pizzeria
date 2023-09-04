@@ -4,35 +4,54 @@ import { selectSort, setSort} from "../redux/slices/filterSlice";
 import { useRef } from 'react';
 
 
+import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
+
 export const list = [ 
-  {name:'популярности (DESC)',  sortProperty: 'rating' },
-  {name:'популярности (ASC)',  sortProperty: '-rating' },
-  {name:'цене (DESC)', sortProperty: 'price' },
-  {name:'цене (ASC)', sortProperty: '-price' },
-  {name:'алфавиту (DESC)', sortProperty: 'name'}, //был title
-  {name:'алфавиту (ASC)', sortProperty: '-name'} 
+  {name:'популярности',  sortProperty: 'rating' },
+  {name:'популярности',  sortProperty: '-rating' },
+
+  {name:'цене', sortProperty: 'price' },  
+  {name:'цене', sortProperty: '-price' },  
+  
+  {name:'алфавиту', sortProperty: 'name'}, 
+  {name:'алфавиту', sortProperty: '-name'} 
+ ]
+
+
+
+ const listRender = [
+  {name:'популярности',  sortProperty: 'rating' },
+  {name:'цене', sortProperty: 'price' },  
+  {name:'алфавиту', sortProperty: 'name'} 
  ]
 
 
 function Sort () {
 
-const [open, setOpen] = useState(false)            
+const [open, setOpen] = useState(false)   
+
+
 const dispatch  = useDispatch()
-
 const sort = useSelector(selectSort)
-
-
-
-
 
 const sortRef = useRef()
 const sortName = sort.name
 
-const OnClickListItem = (obj) => {
-    dispatch(setSort(obj))
-    setOpen(false)
-  }
 
+const OnClickListItem = (obj, objState) => {
+
+    if (obj.name !== objState.name) {
+      setOpen(false)
+      dispatch(setSort(objState))
+    }
+
+    if(obj.name === objState.name )  {
+      setOpen(false)
+
+    let newSent = list.filter((el) => el.name === obj.name && el.sortProperty !== obj.sortProperty )
+      dispatch(setSort(...newSent))
+    }  
+}
 
 
   useEffect(() => {
@@ -70,22 +89,33 @@ const OnClickListItem = (obj) => {
           <b>Сортировка по:</b>
           <span onClick={() => setOpen(!open)}>{sortName}</span>
 
+           {sort.sortProperty.includes('-') ?<IoArrowDownSharp className="sort__popup_icon"  />: <IoArrowUpSharp className="sort__popup_icon" />}   
+
         </div>
 
       {open && 
         <div className="sort__popup">
           <ul>
-           { list.map((obj, i) => (
+           { listRender.map((obj, i) => (
+
               <li
                 key={i}
-                onClick={() => OnClickListItem(obj)}
-                className={sort.sortProperty === obj.sortProperty ? 'active': ''}
-              >
-                {obj.name}
+                 onClick={() => OnClickListItem(sort, obj)} 
+
+                className={sort.name == obj.name ? 'active': ''}>
+
+                {obj.name}  
+
               </li>
+              
+
            ))}
           </ul>
         </div>}
+
+     
+           
+
       </div>)
   }
   
