@@ -98,7 +98,7 @@ useEffect (() => {
         getPizzas();
     }
     isSeacrh.current = false
-}, [categoryId, sort.sortProperty, search, currentPage,  isMounted.current  ])  
+}, [categoryId, sort.sortProperty, search, currentPage,    ])  
 
 
 

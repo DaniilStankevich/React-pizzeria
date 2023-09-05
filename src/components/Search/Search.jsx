@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import React, { useRef } from 'react'
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setSearch} from '../../redux/slices/filterSlice';
-
+import { selectFilter  } from '../../redux/slices/filterSlice';
 import debounce from 'lodash.debounce'
 import styles from './Search.module.scss'
 
@@ -13,6 +13,8 @@ import styles from './Search.module.scss'
 
 
 const Search = () => { 
+
+const { search } = useSelector(selectFilter)
 
 const [value, setValue] = useState('')
 
@@ -44,6 +46,7 @@ const updateSearchValue = useCallback(
 )
 
 
+
 const onChangeInput = (event) => {
 
   setValue(event.target.value)            //Сдесь идет мгновенная перерисовка ипута
@@ -58,6 +61,12 @@ const onClickClear = () => {
   setValue('')                  // Очищаем vlue инпута
   inputRef.current.focus()      // Наводим фокус
 }
+
+
+useEffect(() => {
+  setValue(search)
+}, []) 
+
 
 
 
