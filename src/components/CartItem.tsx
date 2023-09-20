@@ -4,8 +4,19 @@ import { addItem, minusItem, removeItem,} from '../redux/slices/cartSlice'
 
 
 
+type CartItemProps = {
+    id: string,
+    name: string ,
+    type: string , 
+    count:  number, 
+    price:  number, 
+    size: number,  
+    imageUrl: string, 
+    uniqueValue: string
+}
 
-export const CartItem = ({ id, name, type, count, price, size,  imageUrl, uniqueValue}) => {
+
+export const CartItem: React.FC<CartItemProps> = ({ id, name, type, count, price, size,  imageUrl, uniqueValue}) => {
 
 const dispatch = useDispatch()
 

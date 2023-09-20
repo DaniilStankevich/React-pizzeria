@@ -7,7 +7,7 @@ import { fetchPizzas, selectPizzaData} from '../redux/slices/pizzaSlice';
 import qs from 'qs'
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
-import PizzaBlock from '../components/PizzaBlock/';
+import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
@@ -16,7 +16,7 @@ import Pagination from '../components/Pagination';
 
 
 
-export const Home = () => {
+export const Home: React.FC = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -29,13 +29,13 @@ export const Home = () => {
   const {categoryId, sort, currentPage, search} = useSelector(selectFilter)
 
 
-const onChangeCategory = (id) => {
+const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id))  
 }
 
 
-const onChangePage = (number) => {
-    dispatch(setCurrentPage( number ))
+const onChangePage = (page:  number) => {
+    dispatch(setCurrentPage( page ))
 }
 
 
@@ -47,13 +47,16 @@ const getPizzas = async () => {
   const category = categoryId > 0 ? `category=${categoryId}` : '';
   const searchHome = search ? `&search=${search}` : '';
 
-  dispatch(fetchPizzas({
+  dispatch(
+    // @ts-ignore
+    
+    fetchPizzas({
           sortBy,                   
           order,                    
-
           category,
           searchHome,
-          currentPage   }))
+          currentPage   
+        }))
 }
 
 
@@ -101,15 +104,17 @@ useEffect (() => {
 }, [categoryId, sort.sortProperty, search, currentPage,    ])  
 
 
-
-const pizzas =  items.map((obj) => (<Link key={obj.id}  to={`/pizza/${obj.id}`}>  <PizzaBlock  {...obj}/> </Link>))
+  
+const pizzas =  items.map((obj: any) => (<Link key={obj.id}  to={`/pizza/${obj.id}`}>  <PizzaBlock  {...obj}/> </Link>))
 const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> )
 
+
+//value={categoryId} onChangeCategory={onChangeCategory} funPage={setCurrentPage}
 
 return (
 <div className="container">
   <div className="content__top">
-        <Categories value={categoryId} onChangeCategory={onChangeCategory} funPage={setCurrentPage}/>
+        <Categories />
         <Sort/>
   </div>   
       <h2 className="content__title">Все пиццы</h2>
@@ -122,7 +127,7 @@ return (
 
       <div className="content__items"> {status === 'loading' ? skeleton : pizzas}</div>} 
 
-      <Pagination  currentPage={currentPage}   onChangePage={onChangePage}/>
+      <Pagination />
 </div>
 )}
 

@@ -7,12 +7,12 @@ import CartEmpty from '../components/CartEmpty';
 
 
 
-const Cart = () => {
+const Cart: React.FC = () => {
 
   const dispatch = useDispatch()
   const {items, totalPrice } = useSelector(selectCart)
 
-  const totalCount = items.reduce((sum, item) => sum + item.count , 0)
+  const totalCount = items.reduce((sum: number, item: any) => sum + item.count , 0)
 
 const onClickClear = () =>  {
     dispatch(clearItem())
@@ -48,7 +48,7 @@ if (!totalPrice)  {
     </div>
 
     <div className="content__items">
-      {items.map((item, index) =>  <CartItem  key={index}  {...item} /> )}
+      {items.map((item: any, index: number) =>  <CartItem  key={index}  {...item} /> )}
     </div>
 
     <div className="cart__bottom">

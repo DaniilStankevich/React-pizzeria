@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect } from 'react'
 import React, { useRef } from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {setSearch} from '../../redux/slices/filterSlice';
-import { selectFilter  } from '../../redux/slices/filterSlice';
+import { selectFilter, setCurrentPage } from '../../redux/slices/filterSlice';
 import debounce from 'lodash.debounce'
 import styles from './Search.module.scss'
 
@@ -12,14 +12,14 @@ import styles from './Search.module.scss'
 // фу-ия будет вызвана в через какое то времени установленным 2 аргументом 
 
 
-const Search = () => { 
+const Search: React.FC = () => { 
 
 const { search } = useSelector(selectFilter)
 
 const [value, setValue] = useState('')
 
 // Переменну inputRef мы создавали для фокуса
-const inputRef = useRef()
+const inputRef = useRef<HTMLInputElement>(null)
 
 // Для отправки строки в хранилище
 const searchDispath = useDispatch()
@@ -47,7 +47,7 @@ const updateSearchValue = useCallback(
 
 
 
-const onChangeInput = (event) => {
+const onChangeInput = (event: any) => {
 
   setValue(event.target.value)            //Сдесь идет мгновенная перерисовка ипута
   updateSearchValue(event.target.value)   //Запуск функции debounce для отправки данных
@@ -59,7 +59,8 @@ const onClickClear = () => {
   searchDispath(setSearch(''))  // В хранилище очищаем поле ввода
   updateSearchValue('')         // Запускаем функцию debounce с пустой строкой для отмены запроса
   setValue('')                  // Очищаем vlue инпута
-  inputRef.current.focus()      // Наводим фокус
+  inputRef.current?.focus()    // Наводим фокус и в случае налиция "inputRef.current" значения, вызываем
+  searchDispath(setCurrentPage(1))
 }
 
 

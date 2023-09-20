@@ -2,15 +2,22 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import {  setCategoryId , selectFilter, setCurrentPage } from '../redux/slices/filterSlice'
 
+//Пример типизации пропс 
+type CategoriesProps  = {
+  value: number,
+  onChangeCategory: any
+}
+
+//React.FC<CategoriesProps> - лучше типизровать так
 
 
-function Categories() {
+const Categories: React.FC = () => {
 
 const {categoryId}  = useSelector(selectFilter)
 const dispatch = useDispatch()
 
 
-const onChangePage = (index) => {
+const onChangePage = (index: number) => {
   dispatch(setCategoryId(index))
   dispatch(setCurrentPage(1))
 }

@@ -2,13 +2,20 @@ import { useState,  useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSort, setSort} from "../redux/slices/filterSlice";
 import { useRef } from 'react';
-
-
 import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
 
-export const list = [ 
+
+
+
+type SortItem = {
+  name: string
+  sortProperty: string
+}
+
+
+export const list: SortItem[] = [ 
   {name:'популярности',  sortProperty: 'rating' },
-  {name:'популярности',  sortProperty: '-rating' },
+  {name:'популярности',  sortProperty: '-rating' }, 
 
   {name:'цене', sortProperty: 'price' },  
   {name:'цене', sortProperty: '-price' },  
@@ -19,7 +26,7 @@ export const list = [
 
 
 
- const listRender = [
+ const listRender: SortItem[]  = [
   {name:'популярности',  sortProperty: 'rating' },
   {name:'цене', sortProperty: 'price' },  
   {name:'алфавиту', sortProperty: 'name'} 
@@ -34,11 +41,11 @@ const [open, setOpen] = useState(false)
 const dispatch  = useDispatch()
 const sort = useSelector(selectSort)
 
-const sortRef = useRef()
+const sortRef = useRef<HTMLDivElement>(null)
 const sortName = sort.name
 
 
-const OnClickListItem = (obj, objState) => {
+const OnClickListItem = (obj: SortItem, objState: SortItem) => {
 
     if (obj.name !== objState.name) {
       setOpen(false)
@@ -49,13 +56,15 @@ const OnClickListItem = (obj, objState) => {
       setOpen(false)
 
     let newSent = list.filter((el) => el.name === obj.name && el.sortProperty !== obj.sortProperty )
-      dispatch(setSort(...newSent))
+
+
+      dispatch(setSort(newSent[0])) 
     }  
 }
 
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if(!event.composedPath().includes(sortRef.current)) {
         setOpen(false)
     }

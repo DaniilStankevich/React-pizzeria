@@ -4,14 +4,19 @@ import ReactPaginate from 'react-paginate';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setCurrentPage,          selectFilter} from '../../redux/slices/filterSlice';
 
+/* 
+type PaginationProps = {
+  currentPage: number,
+  coChangePage: any
+}
 
+React.FC<PaginationProps>
+*/
 
-
-const Pagination = () => {
+const Pagination: React.FC = () => {
 
 const {currentPage}  = useSelector(selectFilter)
 const dispatch = useDispatch()
-
 
   return (
     <ReactPaginate

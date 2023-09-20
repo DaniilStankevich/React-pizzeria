@@ -1,10 +1,26 @@
+import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
 
+type PizzaProps = {
+  id: string,
+  name: string ,
+  types: number[] , 
+  price:  number, 
+  sizes: number[],  
+  imageUrl: string, 
+}
 
-function Pizza( {id, name, price, imageUrl, sizes, types} ) {
+
+
+
+const Pizza: React.FC<PizzaProps> = ({id, name, price, imageUrl, sizes, types}) => {
+
+
+
+//function Pizza( {id, name, price, imageUrl, sizes, types} ) {
 
 const dispatch = useDispatch()
 const cartItemCount = useSelector(selectCartItemById(id))  // Возврщает count всех найденных пицц одно id
@@ -18,18 +34,20 @@ const [activeSize, setActiveSize] = useState(sizes[0])  //Размеры
 const typeNames = ['Тонкое', 'Традиционнное']
 
 
-const typePastry = (event) => {
+//parameter) event: React.MouseEvent<HTMLLIElement, MouseEvent>
+
+const typePastry = (event: any) => {
   event.preventDefault()
   setActiveType(event.target.value)
 }
 
-const typeSize = (event) => {
+const typeSize = (event: any) => {
   event.preventDefault()
   setActiveSize(event.target.value)
 }
 
 
-const onClikAdd = (event) => {
+const onClikAdd = (event: any) => {
   event.preventDefault()
 
   const item = {
