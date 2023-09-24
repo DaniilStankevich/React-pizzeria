@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
+import { CartItem, addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
 
 type PizzaProps = {
-  id: string,
+  id: number,
   name: string ,
   types: number[] , 
   price:  number, 
@@ -14,13 +14,9 @@ type PizzaProps = {
 }
 
 
-
-
 const Pizza: React.FC<PizzaProps> = ({id, name, price, imageUrl, sizes, types}) => {
 
 
-
-//function Pizza( {id, name, price, imageUrl, sizes, types} ) {
 
 const dispatch = useDispatch()
 const cartItemCount = useSelector(selectCartItemById(id))  // Возврщает count всех найденных пицц одно id
@@ -50,13 +46,16 @@ const typeSize = (event: any) => {
 const onClikAdd = (event: any) => {
   event.preventDefault()
 
-  const item = {
+  const item: CartItem = {
     id,
     name,
     price,
     imageUrl,
     type: typeNames[activeType],
-    size: activeSize
+    size: activeSize,
+
+    count: 0,
+    uniqueValue: ''
   }
   dispatch(addItem(item))
 }
@@ -106,7 +105,7 @@ return (
           />
         </svg>
         <span>Добавить</span>
-        {addedCount > 0 &&<i> {addedCount} </i> }
+        { addedCount  && <i> {addedCount} </i> }
       </button>
     </div>
     </div> 

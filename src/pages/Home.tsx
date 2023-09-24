@@ -10,6 +10,7 @@ import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
+import { useAppDispatch } from '../redux/store';
 
 
 
@@ -19,7 +20,7 @@ import Pagination from '../components/Pagination';
 export const Home: React.FC = () => {
 
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const isSeacrh = useRef(false) 
   const isMounted = useRef(false)
@@ -28,17 +29,14 @@ export const Home: React.FC = () => {
   const {items, status} = useSelector(selectPizzaData)
   const {categoryId, sort, currentPage, search} = useSelector(selectFilter)
 
-
+/*
 const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id))  
 }
-
-
 const onChangePage = (page:  number) => {
     dispatch(setCurrentPage( page ))
 }
-
-
+*/
 
 const getPizzas = async () => {
 
@@ -48,8 +46,6 @@ const getPizzas = async () => {
   const searchHome = search ? `&search=${search}` : '';
 
   dispatch(
-    // @ts-ignore
-    
     fetchPizzas({
           sortBy,                   
           order,                    
@@ -62,8 +58,6 @@ const getPizzas = async () => {
 
 // ПЕРЕХОД НА СПАРСЕНЫЙ АДРЕС
 useEffect(() => {
-
-
   if(isMounted.current) {
     const qeryString = qs.stringify({       //qs.stringify - делаем строку
 

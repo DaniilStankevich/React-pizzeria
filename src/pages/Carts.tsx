@@ -19,6 +19,10 @@ const onClickClear = () =>  {
 };
 
 
+
+
+
+
 if (!totalPrice)  {
   return <CartEmpty />
 }
