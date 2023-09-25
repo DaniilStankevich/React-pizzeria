@@ -1,23 +1,15 @@
-@import '../variables';
+@import "../variables";
 
 .categories {
   display: flex;
-  
-
-
 
   ul {
     display: flex;
     flex-wrap: wrap;
 
-    
-  @media (max-width: 1100px) {
-    justify-content: center;
-
-  }
-
-
-    
+    @media (max-width: 1100px) {
+      justify-content: center;
+    }
 
     li {
       background-color: #f9f9f9;

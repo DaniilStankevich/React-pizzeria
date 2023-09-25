@@ -33,10 +33,7 @@ const FullPizza: React.FC = () => {
     fecthPizza()
   }, [])
 
-  //<div className="container__fullPizza-loading">
-  // <h1>Загрузка...</h1>
-  //</div>
-  //
+
   if (!pizza) {
     return (
       <div className="container__fullPizza-loading">

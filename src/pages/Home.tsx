@@ -2,15 +2,17 @@ import { useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectFilter, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizzaData} from '../redux/slices/pizzaSlice';
+import { setFilters } from '../redux/filter/slice';
+import { selectFilter } from '../redux/filter/selectors';
+import { useAppDispatch } from '../redux/store';
+import { fetchPizzas } from '../redux/pizza/asyncActions';
+import { selectPizzaData } from '../redux/pizza/selectors'
 import qs from 'qs'
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { useAppDispatch } from '../redux/store';
 
 
 
@@ -21,22 +23,11 @@ export const Home: React.FC = () => {
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-
   const isSeacrh = useRef(false) 
   const isMounted = useRef(false)
 
-
   const {items, status} = useSelector(selectPizzaData)
   const {categoryId, sort, currentPage, search} = useSelector(selectFilter)
-
-/*
-const onChangeCategory = (id: number) => {
-    dispatch(setCategoryId(id))  
-}
-const onChangePage = (page:  number) => {
-    dispatch(setCurrentPage( page ))
-}
-*/
 
 const getPizzas = async () => {
 
@@ -76,19 +67,13 @@ useEffect(() => {
 // Если был первый рендер, то проверем URL-параметры и сохраняем в redux
 // Сработка после перезагрузки страницы
 useEffect(() => {
-
   if (window.location.search) {    //Как вариант useSearchParams
-
     const params = qs.parse(window.location.search.substring(1))  // qs.parse - позволяет спаристь данные из ссылки в объект 
-    const sort = list.find(obj => obj.sortProperty === params.sortProperty)
-  
+    const sort = list.find(obj => obj.sortProperty === params.sortProperty)  
     dispatch(setFilters({ ...params, sort }))
-
     isSeacrh.current = true; 
   }
 }, [])
-
-
 
 useEffect (() => {
     if( !isSeacrh.current ) {
@@ -98,12 +83,9 @@ useEffect (() => {
 }, [categoryId, sort.sortProperty, search, currentPage,    ])  
 
 
-  
 const pizzas =  items.map((obj: any) => (<Link key={obj.id}  to={`/pizza/${obj.id}`}>  <PizzaBlock  {...obj}/> </Link>))
 const skeleton = [ ...new Array(4)].map((_, index)  =>  <Skeleton key={index}/> )
 
-
-//value={categoryId} onChangeCategory={onChangeCategory} funPage={setCurrentPage}
 
 return (
 <div className="container">
@@ -112,15 +94,11 @@ return (
         <Sort/>
   </div>   
       <h2 className="content__title">Все пиццы</h2>
-    
     {status === 'error' ? <div className="content__error-info">
-      
         <h2>  Упсс... 😕</h2>
           <p> К сожалению, не удалось получить питсы.
         Попробуйте повторить попытку позже</p> </div> :  
-
       <div className="content__items"> {status === 'loading' ? skeleton : pizzas}</div>} 
-
       <Pagination />
 </div>
 )}

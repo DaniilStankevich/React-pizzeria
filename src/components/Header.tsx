@@ -1,24 +1,36 @@
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector} from 'react-redux';
-import { selectCart } from '../redux/slices/cartSlice';
 
 import Search from './Search/Search';
 import logoSvg from '../assets/img/pizza-logo.svg';
+import { selectCart } from '../redux/cart/selectors';
 
 
 function Header() {
 
   const {items, totalPrice} = useSelector(selectCart)
   const totalCount = items.reduce((sum: number, item: any) => sum + item.count , 0)
+  const isMounted = React.useRef(false)
 
+  const location = useLocation() //Перерисовка в случае нужного адреса
 
-  const location = useLocation() //Перерисовка ком в случае нужного адреса
-
- // Может пригодиться когда компонент точно может перерисовыватся
+ // Может пригодиться когда компонент точно может перерисовываться
  // const pathname = window.location.pathname
 
 
+// Сохраняем коризну в localStorage
+useEffect(() => {
 
+  if(isMounted.current) {
+  const json = JSON.stringify(items)
+  console.log(json)
+console.log('ewfwew')
+  localStorage.setItem('cart', json)
+  }
+
+  isMounted.current = true
+}, [items])
 
 
 return   ( 
@@ -36,11 +48,7 @@ return   (
 
       {location.pathname !== '/cart' &&  <Search />  }
 
-
-
     <div className="header__cart">
-
-  
         <Link to="/cart" className="button button--cart">
           <span>{totalPrice} ₽</span>
           <div className="button__delimiter"></div>

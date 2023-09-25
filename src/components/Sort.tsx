@@ -1,8 +1,11 @@
+import React from 'react'
 import { useState,  useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort} from "../redux/slices/filterSlice";
+import { setSort } from "../redux/filter/slice";
+import { selectSort } from "../redux/filter/selectors";
 import { useRef } from 'react';
 import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
+import { useWhyDidYouUpdate } from 'ahooks';
 
 
 
@@ -24,8 +27,6 @@ export const list: SortItem[] = [
   {name:'алфавиту', sortProperty: '-name'} 
  ]
 
-
-
  const listRender: SortItem[]  = [
   {name:'популярности',  sortProperty: 'rating' },
   {name:'цене', sortProperty: 'price' },  
@@ -33,45 +34,36 @@ export const list: SortItem[] = [
  ]
 
 
-function Sort () {
+const Sort:React.FC = React.memo( () => {
 
 const [open, setOpen] = useState(false)   
-
-
 const dispatch  = useDispatch()
 const sort = useSelector(selectSort)
-
 const sortRef = useRef<HTMLDivElement>(null)
 const sortName = sort.name
 
 
 const OnClickListItem = (obj: SortItem, objState: SortItem) => {
-
     if (obj.name !== objState.name) {
       setOpen(false)
       dispatch(setSort(objState))
     }
-
     if(obj.name === objState.name )  {
       setOpen(false)
 
     let newSent = list.filter((el) => el.name === obj.name && el.sortProperty !== obj.sortProperty )
-
-
       dispatch(setSort(newSent[0])) 
     }  
 }
 
-
-  useEffect(() => {
+ useEffect(() => {
     const handleClickOutside = (event: any) => {
       if(!event.composedPath().includes(sortRef.current)) {
         setOpen(false)
-    }
+        }
     }
     
     document.body.addEventListener('click', handleClickOutside )
-   
     return () => {
       document.body.removeEventListener('click', handleClickOutside );
     };
@@ -117,15 +109,10 @@ const OnClickListItem = (obj: SortItem, objState: SortItem) => {
 
               </li>
               
-
            ))}
           </ul>
         </div>}
-
-     
-           
-
       </div>)
-  }
+  })
   
 export default Sort;

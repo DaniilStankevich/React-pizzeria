@@ -3,7 +3,8 @@
 ### 🛠 Technologies
 
 - ReactJS 18.2
-- CSS-Modules / SCSS
+- TypeScript
+- CSS-Modules /SCSS
 - React Hooks
 - React Router v6
 - Axios + Fetch

@@ -1,8 +1,11 @@
 import { useCallback, useState, useEffect } from 'react'
 import React, { useRef } from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearch} from '../../redux/slices/filterSlice';
-import { selectFilter, setCurrentPage } from '../../redux/slices/filterSlice';
+import {setSearch} from '../../redux/filter/slice';
+import { setCurrentPage } from '../../redux/filter/slice';
+import { selectFilter } from '../../redux/filter/selectors';
+
+
 import debounce from 'lodash.debounce'
 import styles from './Search.module.scss'
 
@@ -12,18 +15,16 @@ import styles from './Search.module.scss'
 // фу-ия будет вызвана в через какое то времени установленным 2 аргументом 
 
 
-const Search: React.FC = () => { 
+const Search: React.FC =  () => { 
 
+const searchDispath = useDispatch()
 const { search } = useSelector(selectFilter)
+
 
 const [value, setValue] = useState('')
 
-// Переменну inputRef мы создавали для фокуса
+// Переменная inputRef создана для фокуса
 const inputRef = useRef<HTMLInputElement>(null)
-
-// Для отправки строки в хранилище
-const searchDispath = useDispatch()
-
 
 
 const updateSearchValue = useCallback(
